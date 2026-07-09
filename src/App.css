@@ -1,0 +1,162 @@
+.app {
+  display: flex;
+  width: 100vw;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.panel {
+  width: 340px;
+  flex-shrink: 0;
+  padding: 24px;
+  overflow-y: auto;
+  background: #ffffff;
+  border-right: 1px solid #e2e5ea;
+  box-sizing: border-box;
+}
+
+.panel h1 {
+  font-size: 20px;
+  margin: 0 0 6px;
+}
+
+.subtitle {
+  font-size: 13px;
+  color: #666;
+  margin: 0 0 24px;
+  line-height: 1.4;
+}
+
+.panel section {
+  margin-bottom: 22px;
+}
+
+.panel h2 {
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: #888;
+  margin: 0 0 10px;
+}
+
+.panel label {
+  display: block;
+  font-size: 13px;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.panel label.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.panel label.checkbox input {
+  width: auto;
+}
+
+.panel input[type='number'] {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 8px 10px;
+  border: 1px solid #d5d8dd;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+}
+
+.row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.battery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.battery-btn {
+  padding: 10px 8px;
+  border: 1px solid #d5d8dd;
+  border-radius: 6px;
+  background: #fafbfc;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.battery-btn:hover {
+  border-color: #4f8ef7;
+}
+
+.battery-btn.active {
+  background: #4f8ef7;
+  border-color: #4f8ef7;
+  color: white;
+}
+
+.battery-meta {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #888;
+}
+
+.layout-info {
+  font-size: 20px;
+  font-weight: 600;
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.layout-info .muted {
+  font-size: 12px;
+  font-weight: 400;
+  color: #888;
+}
+
+.error {
+  background: #fdeceb;
+  color: #c0392b;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  margin-bottom: 16px;
+}
+
+.export-btn {
+  width: 100%;
+  padding: 14px;
+  background: #1b1f27;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.export-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.export-btn:hover:not(:disabled) {
+  background: #333944;
+}
+
+.footnote {
+  margin-top: 18px;
+  font-size: 11px;
+  color: #999;
+  line-height: 1.5;
+}
+
+.viewer-wrap {
+  flex: 1;
+  min-width: 0;
+}
