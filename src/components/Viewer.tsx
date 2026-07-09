@@ -19,7 +19,8 @@ export default function Viewer({ geometry }: ViewerProps) {
     if (!container) return;
 
     const scene = new THREE.Scene();
-    scene.background = new THREE.Color(0xf0f2f5);
+    scene.background = new THREE.Color(0x05070d);
+    scene.fog = new THREE.Fog(0x05070d, 300, 900);
     sceneRef.current = scene;
 
     const camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 2000);
@@ -37,13 +38,16 @@ export default function Viewer({ geometry }: ViewerProps) {
     controls.enableDamping = true;
     controlsRef.current = controls;
 
-    const hemi = new THREE.HemisphereLight(0xffffff, 0x666666, 1.5);
+    const hemi = new THREE.HemisphereLight(0x8fb8ff, 0x0a0e18, 1.1);
     scene.add(hemi);
-    const dir = new THREE.DirectionalLight(0xffffff, 1.2);
+    const dir = new THREE.DirectionalLight(0xffffff, 1.6);
     dir.position.set(100, 200, 100);
     scene.add(dir);
+    const rim = new THREE.DirectionalLight(0x4fd1ff, 0.5);
+    rim.position.set(-150, 80, -100);
+    scene.add(rim);
 
-    const grid = new THREE.GridHelper(400, 40, 0xcccccc, 0xe0e0e0);
+    const grid = new THREE.GridHelper(400, 40, 0x2a3550, 0x141a2c);
     scene.add(grid);
 
     let raf = 0;
@@ -84,9 +88,9 @@ export default function Viewer({ geometry }: ViewerProps) {
 
     if (geometry) {
       const material = new THREE.MeshStandardMaterial({
-        color: 0x4f8ef7,
-        roughness: 0.55,
-        metalness: 0.05,
+        color: 0x3d6fe0,
+        roughness: 0.4,
+        metalness: 0.25,
         side: THREE.DoubleSide,
       });
       const mesh = new THREE.Mesh(geometry, material);

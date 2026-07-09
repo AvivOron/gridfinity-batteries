@@ -138,11 +138,14 @@ function App() {
 
         <footer className="footnote">
           Outer footprint: {(gridX * 42 - 0.5).toFixed(1)}mm &times; {(gridY * 42 - 0.5).toFixed(1)}mm &times; {(heightUnits * 7 + 4.75 + (includeLip ? 4.4 : 0)).toFixed(1)}mm
+          <br />
+          Net height (excl. base foot): {(heightUnits * 7 + (includeLip ? 4.4 : 0)).toFixed(1)}mm
         </footer>
       </aside>
 
       <main className="viewer-wrap">
         <Viewer geometry={geometry} />
+        <div className="viewer-hint">drag to rotate &middot; scroll to zoom</div>
       </main>
     </div>
   );

@@ -70,8 +70,23 @@ function outerSize(units: number) {
 }
 
 export function recommendedHeightUnits(battery: BatterySpec): number {
-  const neededWall = battery.length + 1 + FLOOR_THICKNESS - BASE_HEIGHT;
+  // Coins stand on edge in a slit cut ~60% of their diameter deep; cylinders
+  // (AA/AAA) stand upright and need their full length.
+  const neededDepth = battery.shape === 'coin' ? battery.diameter * 0.6 : battery.length;
+  const neededWall = neededDepth + 1 + FLOOR_THICKNESS - BASE_HEIGHT;
   return Math.max(1, Math.ceil(neededWall / UNIT_HEIGHT));
+}
+
+// Coin cells stand on edge in a vertical slit slot: narrow along X (thickness +
+// clearance), tall along Y (diameter + clearance) — the coin drops in edge-first, like
+// a coin-sorter tray. Cylindrical batteries (AA/AAA) get a square footprint either way.
+export function cellFootprint(battery: BatterySpec): { w: number; h: number } {
+  const clearance = battery.spacing ?? 1;
+  if (battery.shape === 'coin') {
+    return { w: battery.length + clearance, h: battery.diameter + clearance };
+  }
+  const size = battery.diameter + clearance;
+  return { w: size, h: size };
 }
 
 export function computeLayout(params: GridfinityParams): LayoutInfo {
@@ -81,12 +96,12 @@ export function computeLayout(params: GridfinityParams): LayoutInfo {
   const edgeInset = includeLip ? LIP_PROFILE[0][0] + 0.1 : WALL;
   const usableX = outerSize(gridX) - 2 * edgeInset;
   const usableY = outerSize(gridY) - 2 * edgeInset;
-  const cellSize = battery.diameter + (battery.spacing ?? 1);
+  const { w: cellW, h: cellH } = cellFootprint(battery);
 
-  const cols = Math.max(1, Math.floor((usableX + WALL) / (cellSize + WALL)));
-  const rows = Math.max(1, Math.floor((usableY + WALL) / (cellSize + WALL)));
+  const cols = Math.max(1, Math.floor((usableX + WALL) / (cellW + WALL)));
+  const rows = Math.max(1, Math.floor((usableY + WALL) / (cellH + WALL)));
 
-  return { cols, rows, cellW: cellSize, cellH: cellSize, count: cols * rows };
+  return { cols, rows, cellW, cellH, count: cols * rows };
 }
 
 let kernelPromise: Promise<OcctKernel> | null = null;
@@ -115,7 +130,9 @@ function roundedRectEdges(
 ): ShapeHandle[] {
   const hw = width / 2;
   const hd = depth / 2;
-  const r = Math.min(radius, hw, hd);
+  // A radius exactly at half-width/half-depth collapses a straight edge to zero
+  // length, which OCCT rejects — stay strictly under the smaller half-dimension.
+  const r = Math.min(radius, hw - 0.01, hd - 0.01);
 
   const quarterArc = (cx: number, cy: number, startDeg: number, endDeg: number) => {
     const midDeg = (startDeg + endDeg) / 2;
@@ -254,17 +271,35 @@ export async function buildBinGeometryOcct(params: GridfinityParams): Promise<Bu
   const startX = -totalW / 2 + layout.cellW / 2;
   const startY = -totalD / 2 + layout.cellH / 2;
 
+  const spacing = battery.spacing ?? 1;
   const maxDepth = totalHeight - FLOOR_THICKNESS;
-  const cavityDepth = Math.min(battery.length + 1, maxDepth);
-  const cavityRadius = battery.diameter / 2 + (battery.spacing ?? 1) / 2;
 
   const cavityTools: ShapeHandle[] = [];
   for (let r = 0; r < layout.rows; r++) {
     for (let c = 0; c < layout.cols; c++) {
       const cx = startX + c * (layout.cellW + WALL);
       const cy = startY + r * (layout.cellH + WALL);
-      const cyl = kernel.makeCylinder(cavityRadius, cavityDepth + 1); // +1 pokes above the rim
-      cavityTools.push(kernel.translate(cyl, cx, cy, totalHeight - cavityDepth));
+
+      if (battery.shape === 'coin') {
+        // Vertical slit: the coin stands on edge and drops in from the top, like a
+        // coin-sorter tray. Cut ~60% of the diameter deep so the rest pokes above the
+        // rim for an easy pinch-and-pull, capped so a floor always remains.
+        const slotDepth = Math.min(battery.diameter * 0.6, maxDepth);
+        const slotWidth = battery.length + spacing;
+        const slotHeight = battery.diameter + spacing;
+        // Radius = half-width so the slot's short ends read as semicircular caps
+        // (roundedRectEdges clamps this just under half-width to stay non-degenerate).
+        const slotFace = kernel.makeFace(
+          kernel.makeWire(roundedRectEdges(kernel, slotWidth, slotHeight, slotWidth / 2, totalHeight - slotDepth))
+        );
+        const slot = kernel.extrude(slotFace, 0, 0, slotDepth + 1); // +1 pokes above the rim
+        cavityTools.push(kernel.translate(slot, cx, cy, 0));
+      } else {
+        const cavityDepth = Math.min(battery.length + 1, maxDepth);
+        const cavityRadius = battery.diameter / 2 + spacing / 2;
+        const cyl = kernel.makeCylinder(cavityRadius, cavityDepth + 1); // +1 pokes above the rim
+        cavityTools.push(kernel.translate(cyl, cx, cy, totalHeight - cavityDepth));
+      }
     }
   }
   if (cavityTools.length > 0) {

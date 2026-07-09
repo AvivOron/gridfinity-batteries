@@ -9,9 +9,11 @@ body,
   padding: 0;
   width: 100%;
   height: 100%;
+  overscroll-behavior: none;
 }
 
 body {
-  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
-  color: #1b1f27;
+  font-family: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: #e8ecf5;
+  background: #05070d;
 }
