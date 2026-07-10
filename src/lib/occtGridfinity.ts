@@ -110,7 +110,9 @@ export function getKernel(): Promise<OcctKernel> {
     // Browser: the .wasm is served from public/. Node (tests): auto-locate it next to
     // the occt-wasm JS module.
     kernelPromise =
-      typeof window === 'undefined' ? OcctKernel.init() : OcctKernel.init({ wasm: '/occt-wasm.wasm' });
+      typeof window === 'undefined'
+        ? OcctKernel.init()
+        : OcctKernel.init({ wasm: `${import.meta.env.BASE_URL}occt-wasm.wasm` });
   }
   return kernelPromise;
 }

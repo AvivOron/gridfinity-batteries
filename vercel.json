@@ -1,0 +1,7 @@
+{
+  "rewrites": [
+    { "source": "/gridfinity-batteries/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/gridfinity-batteries", "destination": "/index.html" },
+    { "source": "/(.*)", "destination": "/index.html" }
+  ]
+}
