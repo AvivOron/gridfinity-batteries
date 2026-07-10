@@ -1,6 +1,9 @@
 {
   "rewrites": [
     { "source": "/gridfinity-batteries/assets/(.*)", "destination": "/assets/$1" },
+    { "source": "/gridfinity-batteries/favicon.svg", "destination": "/favicon.svg" },
+    { "source": "/gridfinity-batteries/icons.svg", "destination": "/icons.svg" },
+    { "source": "/gridfinity-batteries/occt-wasm.wasm", "destination": "/occt-wasm.wasm" },
     { "source": "/gridfinity-batteries", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
