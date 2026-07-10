@@ -4,6 +4,9 @@
     { "source": "/gridfinity-batteries/favicon.svg", "destination": "/favicon.svg" },
     { "source": "/gridfinity-batteries/icons.svg", "destination": "/icons.svg" },
     { "source": "/gridfinity-batteries/occt-wasm.wasm", "destination": "/occt-wasm.wasm" },
+    { "source": "/gridfinity-batteries/og-image.png", "destination": "/og-image.png" },
+    { "source": "/gridfinity-batteries/robots.txt", "destination": "/robots.txt" },
+    { "source": "/gridfinity-batteries/sitemap.xml", "destination": "/sitemap.xml" },
     { "source": "/gridfinity-batteries", "destination": "/index.html" },
     { "source": "/(.*)", "destination": "/index.html" }
   ]
