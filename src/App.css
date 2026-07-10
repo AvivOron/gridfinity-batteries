@@ -263,6 +263,14 @@
   line-height: 1.6;
 }
 
+.attribution {
+  margin-top: 12px;
+  font-size: 10px;
+  color: var(--text-dim);
+  line-height: 1.5;
+  opacity: 0.7;
+}
+
 .viewer-wrap {
   flex: 1;
   min-width: 0;

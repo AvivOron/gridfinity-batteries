@@ -141,6 +141,10 @@ function App() {
           <br />
           Net height (excl. base foot): {(heightUnits * 7 + (includeLip ? 4.4 : 0)).toFixed(1)}mm
         </footer>
+
+        <p className="attribution">
+          Gridfinity is an open storage standard created by Zack Freedman. This is an independent, unofficial tool.
+        </p>
       </aside>
 
       <main className="viewer-wrap">
